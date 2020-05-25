@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:news/custom_colors.dart';
+import 'package:news/utils/custom_colors.dart';
 import 'package:news/ui/moving_news_screen.dart';
 import 'package:news/ui/polities_news_screen.dart';
 import 'package:news/ui/sports_news_screen.dart';
