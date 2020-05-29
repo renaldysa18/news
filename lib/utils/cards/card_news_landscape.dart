@@ -4,7 +4,8 @@ import 'package:news/utils/custom_colors.dart';
 class CardNewsLandscape extends StatelessWidget {
 
   String image, title, genre, publisher;
-  CardNewsLandscape({this.image, this.title, this.genre, this.publisher});
+  VoidCallback onTap;
+  CardNewsLandscape({this.image, this.title, this.genre, this.publisher, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,7 @@ class CardNewsLandscape extends StatelessWidget {
             ),
           ],
         ),
+        onTap: onTap,
       ),
     );
   }
