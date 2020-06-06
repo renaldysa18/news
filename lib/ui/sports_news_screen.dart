@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:news/ui/detail_news_screen.dart';
 import 'package:news/utils/cards/card_news_landscape.dart';
@@ -10,6 +11,8 @@ class SportsNewsScreen extends StatefulWidget {
 }
 
 class _SportsNewsScreenState extends State<SportsNewsScreen> {
+  Firestore firestore = Firestore.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,49 +37,38 @@ class _SportsNewsScreenState extends State<SportsNewsScreen> {
               ),
             ),
           ),
-          CardNewsLandscape(
-            image:
-                'https://upload.wikimedia.org/wikipedia/commons/8/8d/President_Barack_Obama.jpg',
-            genre: 'sport',
-            title: 'Obama sedang melakukan olahraga berlari',
-            publisher: 'Renal',
-            onTap: () {
-              _navigateToDetail(context);
+          StreamBuilder<QuerySnapshot>(
+            stream: firestore.collection('news').snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return buildDataNews(snapshot);
             },
-          ),
-          CardNewsLandscape(
-            image:
-                'https://upload.wikimedia.org/wikipedia/commons/8/8d/President_Barack_Obama.jpg',
-            genre: 'sport',
-            title: 'Obama sedang melakukan olahraga berlari',
-            publisher: 'Renal',
-            onTap: () {
-              _navigateToDetail(context);
-            },
-          ),
-          CardNewsLandscape(
-            image:
-                'https://upload.wikimedia.org/wikipedia/commons/8/8d/President_Barack_Obama.jpg',
-            genre: 'sport',
-            title: 'Obama sedang melakukan olahraga berlari',
-            publisher: 'Renal',
-            onTap: () {
-              _navigateToDetail(context);
-            },
-          ),
-          CardNewsLandscape(
-            image:
-                'https://upload.wikimedia.org/wikipedia/commons/8/8d/President_Barack_Obama.jpg',
-            genre: 'sport',
-            title: 'Obama sedang melakukan olahraga berlari',
-            publisher: 'Renal',
-            onTap: () {
-              _navigateToDetail(context);
-            },
-          ),
+          )
         ],
       )),
     );
+  }
+
+  buildDataNews(AsyncSnapshot<QuerySnapshot> snapshot) {
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: snapshot.data.documents.length,
+        itemBuilder: (BuildContext context, int index) {
+          DocumentSnapshot document = snapshot.data.documents[index];
+          Map<String, dynamic> data = document.data;
+          return CardNewsLandscape(
+            image: data['image'],
+            genre: data['genre'],
+            title: data['title'],
+            publisher: data['publisher'],
+            onTap: () {},
+          );
+        });
   }
 
   _navigateToDetail(context) {
